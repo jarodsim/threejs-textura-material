@@ -79,13 +79,13 @@ const geometry = new THREE.BoxGeometry(1, 1, 1)
 
 const cubeTextureLoader = new THREE.CubeTextureLoader()
 
-const environmentMapTexture = cubeTextureLoader.load([
-    '/textures/environmentMaps/1/px.jpg',
-    '/textures/environmentMaps/1/nx.jpg',
-    '/textures/environmentMaps/1/py.jpg',
-    '/textures/environmentMaps/1/ny.jpg',
-    '/textures/environmentMaps/1/pz.jpg',
-    '/textures/environmentMaps/1/nz.jpg'
+const environmentMapTexture = cubeTextureLoader.setPath( 'textures/door/').load([
+    'playstore.png',
+    'playstore.png',
+    'playstore.png',
+    'playstore.png',
+    'playstore.png',
+    'playstore.png'
 ])
 
 const material = new THREE.MeshStandardMaterial()
