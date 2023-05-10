@@ -22,6 +22,19 @@ const sizes = {
 // Scene
 const scene = new THREE.Scene()
 
+
+/**
+ * Lights
+ */
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+scene.add(ambientLight)
+
+const pointLight = new THREE.PointLight(0xffffff, 0.5)
+pointLight.position.x = 2
+pointLight.position.y = 3
+pointLight.position.z = 4
+scene.add(pointLight)
+
 const loadingManager = new THREE.LoadingManager()
 loadingManager.onStart = () => {
     console.log('loading started')
@@ -48,27 +61,87 @@ const ambientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclus
 const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
 const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 
-colorTexture.wrapS = THREE.RepeatWrapping
-colorTexture.wrapT = THREE.RepeatWrapping
+const doorColorTexture = textureLoader.load('/textures/door/color.jpg')
+const joaoTextura = textureLoader.load('/textures/door/jj.jpg')
+const mineTerra = textureLoader.load('/textures/door/mine_terra.webp')
+const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg')
+const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
+const doorHeightTexture = textureLoader.load('/textures/door/height.jpg')
+const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg')
+const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
+const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
+const matcapTexture = textureLoader.load('/textures/matcaps/1.png')
+const gradientTexture = textureLoader.load('/textures/gradients/3.jpg')
+
+// colorTexture.wrapS = THREE.RepeatWrapping
+// colorTexture.wrapT = THREE.RepeatWrapping
 
 // colorTexture.offset.x = 0.5
 // colorTexture.offset.y = 0.5
 
 // colorTexture.rotation = Math.PI * 0.25
 
-    // colorTexture.rotation = Math.PI * 0.25
-    // colorTexture.center.x = 0.5
-    // colorTexture.center.y = 0.5
+// colorTexture.rotation = Math.PI * 0.25
+// colorTexture.center.x = 0.5
+// colorTexture.center.y = 0.5
 
 colorTexture.magFilter = THREE.NearestFilter
 
-const material = new THREE.MeshBasicMaterial({
-    map: colorTexture
-})
-
+// const material = new THREE.MeshBasicMaterial({
+//     map: colorTexture
+// })
 
 // Create an empty BufferGeometry
 const geometry = new THREE.BoxGeometry(1, 1, 1)
+
+
+// const material = new THREE.MeshBasicMaterial()
+
+// material.map = doorColorTexture
+// material.color = new THREE.Color('#ff0000')
+// material.alphaMap = doorAlphaTexture
+// const material = new THREE.MeshNormalMaterial()
+// const material = new THREE.MeshMatcapMaterial()
+const material = new THREE.MeshStandardMaterial()
+
+const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.5, 64, 64),
+    material
+)
+sphere.position.x = - 1.5
+
+const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
+    material
+)
+
+plane.position.y = -1.5
+
+const torus = new THREE.Mesh(
+    new THREE.TorusGeometry(0.3, 0.2, 64, 128),
+    material
+)
+torus.position.x = 1.5
+
+scene.add(sphere, plane, torus)
+
+material.metalness = 0.45
+material.roughness = 0.65
+material.map = doorColorTexture
+
+sphere.geometry.setAttribute('uv2', new THREE.BufferAttribute(sphere.geometry.attributes.uv.array, 2))
+plane.geometry.setAttribute('uv2', new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2))
+torus.geometry.setAttribute('uv2', new THREE.BufferAttribute(torus.geometry.attributes.uv.array, 2))
+
+material.aoMap = doorAmbientOcclusionTexture
+material.aoMapIntensity = 1
+material.displacementMap = doorHeightTexture
+material.displacementScale = 0.05
+material.metalnessMap = doorMetalnessTexture
+material.roughnessMap = doorRoughnessTexture
+material.metalness = 0
+material.roughness = 1
+
 
 const PARAMS = {
     color: '#ff0000',
@@ -163,7 +236,7 @@ meshRotY.on('change', function (ev) {
     mesh.rotation.y = ev.value * Math.PI / 180
 });
 
-folderMesh.addInput(mesh.material, "wireframe")
+// folderMesh.addInput(mesh.material, "wireframe")
 folderMesh.addInput(mesh, "visible")
 folderMesh.addInput(PARAMS, "color").on("change", (e) => {
     material.color.set(new THREE.Color(e.value))
