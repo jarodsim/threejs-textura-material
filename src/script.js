@@ -73,36 +73,25 @@ const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 const matcapTexture = textureLoader.load('/textures/matcaps/1.png')
 const gradientTexture = textureLoader.load('/textures/gradients/3.jpg')
 
-// colorTexture.wrapS = THREE.RepeatWrapping
-// colorTexture.wrapT = THREE.RepeatWrapping
-
-// colorTexture.offset.x = 0.5
-// colorTexture.offset.y = 0.5
-
-// colorTexture.rotation = Math.PI * 0.25
-
-// colorTexture.rotation = Math.PI * 0.25
-// colorTexture.center.x = 0.5
-// colorTexture.center.y = 0.5
 
 colorTexture.magFilter = THREE.NearestFilter
-
-// const material = new THREE.MeshBasicMaterial({
-//     map: colorTexture
-// })
-
-// Create an empty BufferGeometry
 const geometry = new THREE.BoxGeometry(1, 1, 1)
 
+const cubeTextureLoader = new THREE.CubeTextureLoader()
 
-// const material = new THREE.MeshBasicMaterial()
+const environmentMapTexture = cubeTextureLoader.load([
+    '/textures/environmentMaps/1/px.jpg',
+    '/textures/environmentMaps/1/nx.jpg',
+    '/textures/environmentMaps/1/py.jpg',
+    '/textures/environmentMaps/1/ny.jpg',
+    '/textures/environmentMaps/1/pz.jpg',
+    '/textures/environmentMaps/1/nz.jpg'
+])
 
-// material.map = doorColorTexture
-// material.color = new THREE.Color('#ff0000')
-// material.alphaMap = doorAlphaTexture
-// const material = new THREE.MeshNormalMaterial()
-// const material = new THREE.MeshMatcapMaterial()
 const material = new THREE.MeshStandardMaterial()
+material.metalness = 0.5
+material.roughness = 0.1
+material.envMap = environmentMapTexture
 
 const sphere = new THREE.Mesh(
     new THREE.SphereGeometry(0.5, 64, 64),
@@ -125,22 +114,6 @@ torus.position.x = 1.5
 
 scene.add(sphere, plane, torus)
 
-material.metalness = 0.45
-material.roughness = 0.65
-material.map = doorColorTexture
-
-sphere.geometry.setAttribute('uv2', new THREE.BufferAttribute(sphere.geometry.attributes.uv.array, 2))
-plane.geometry.setAttribute('uv2', new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2))
-torus.geometry.setAttribute('uv2', new THREE.BufferAttribute(torus.geometry.attributes.uv.array, 2))
-
-material.aoMap = doorAmbientOcclusionTexture
-material.aoMapIntensity = 1
-material.displacementMap = doorHeightTexture
-material.displacementScale = 0.05
-material.metalnessMap = doorMetalnessTexture
-material.roughnessMap = doorRoughnessTexture
-material.metalness = 0
-material.roughness = 1
 
 
 const PARAMS = {
